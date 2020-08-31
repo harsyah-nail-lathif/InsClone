@@ -102,7 +102,20 @@ class PostAdapter(private val mContext: Context, private val mPost: List<Post>) 
     }
 
     private fun getTotalComment(comment: TextView, postid: String) {
+        val commentRef = FirebaseDatabase.getInstance().reference
+            .child("Comments").child(postid)
 
+        commentRef.addValueEventListener(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()){
+                    comment.text = "view all" + p0.childrenCount.toString() + "comments"
+                }
+            }
+        })
     }
 
     private fun numberOfLikes(likes: TextView, postid: String) {
